@@ -1,0 +1,44 @@
+---
+import { href } from '../lib/paths.js';
+import copy from '../data/letterhouse-copy.json';
+
+interface Props {
+  page?: string;
+}
+
+const { page = 'other' } = Astro.props;
+const { home } = copy;
+---
+
+<figure class="persona-rail" data-persona-rail data-page={page} aria-labelledby="persona-rail-caption">
+  <span class="persona-glow" aria-hidden="true"></span>
+  <div class="persona-stage">
+    <img
+      class="persona-silver persona-portrait"
+      src={href('images/deep-mascot-v2-768.webp')}
+      srcset={`${href('images/deep-mascot-v2-256.webp')} 256w, ${href('images/deep-mascot-v2-768.webp')} 768w`}
+      sizes="300px"
+      width="768"
+      height="1152"
+      alt={home.characterSilverAlt}
+      loading="eager"
+      decoding="async"
+    />
+    <img
+      class="persona-ocean persona-portrait"
+      src={href('images/ocean.webp')}
+      srcset={`${href('images/ocean-480.webp')} 480w, ${href('images/ocean.webp')} 941w`}
+      sizes="300px"
+      width="941"
+      height="1672"
+      alt={home.characterOceanAlt}
+      loading="lazy"
+      decoding="async"
+    />
+    <span class="persona-ripple" aria-hidden="true"></span>
+  </div>
+  <figcaption id="persona-rail-caption">
+    <span class="persona-silver">{home.silverLabel}</span>
+    <span class="persona-ocean">{home.oceanLabel}</span>
+  </figcaption>
+</figure>

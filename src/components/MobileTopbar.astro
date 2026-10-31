@@ -1,0 +1,15 @@
+---
+import { siteConfig } from '../config.js';
+import copy from '../data/letterhouse-copy.json';
+import { href } from '../lib/paths.js';
+import Whale from './Whale.astro';
+import ThemeModes from './ThemeModes.astro';
+---
+
+<header class="topbar glass-1">
+  <a class="brand" href={href()} aria-label={copy.header.brandAria}>
+    <Whale size={26} />
+    <strong>{siteConfig.title}</strong>
+  </a>
+  <ThemeModes variant="topbar" />
+</header>

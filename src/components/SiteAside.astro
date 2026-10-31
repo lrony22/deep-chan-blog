@@ -1,0 +1,39 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { href } from '../lib/paths.js';
+import copy from '../data/letterhouse-copy.json';
+import Icon from './Icon.astro';
+
+interface Props {
+  yearGroups?: [number, CollectionEntry<'blog'>[]][];
+}
+
+const { yearGroups = [] } = Astro.props;
+const { about, aside, archive } = copy;
+const recentYears = yearGroups.slice(0, 4);
+---
+
+<aside class="page-aside" aria-label={aside.aria}>
+  <section class="side-card">
+    <h2>{about.headline}</h2>
+    <p>{about.paragraphs[0]}</p>
+    <a class="side-link" href={href('about/#profile')}>
+      {aside.aboutLink}<Icon name="arrow" size={16} />
+    </a>
+  </section>
+
+  <section class="side-card">
+    <h2>{aside.countsTitle}</h2>
+    <div class="side-counts">
+      {recentYears.map(([year, posts]) => (
+        <div>
+          <b>{year}</b>
+          <span>{archive.yearUnit.replace('{count}', String(posts.length))}</span>
+        </div>
+      ))}
+    </div>
+    <a class="side-link" href={href('archive/')}>
+      {aside.archiveLink}<Icon name="arrow" size={16} />
+    </a>
+  </section>
+</aside>

@@ -1,0 +1,91 @@
+---
+import { href } from '../lib/paths.js';
+import Icon from './Icon.astro';
+import introCopy from '../data/intro-copy.json';
+import copy from '../data/letterhouse-copy.json';
+
+interface Props {
+  latestTitle?: string;
+  latestDate?: string;
+  count?: number;
+  years?: number;
+}
+
+const {
+  latestTitle = '',
+  latestDate = '',
+  count = 0,
+  years = 0,
+} = Astro.props;
+
+const labels = introCopy.labels;
+const latestAnswer = labels.answers.latest.replace('{title}', latestTitle).replace('{date}', latestDate);
+const shelfAnswer = labels.answers.shelf.replace('{count}', String(count)).replace('{years}', String(years));
+const whaleAnswer = copy.about.twoShades.easterEggDesc;
+---
+
+<div
+  class="avatar-dock"
+  data-avatar-dock
+  data-hello={labels.avatarHello}
+  data-nudge={labels.composerNudge}
+  data-greeting={introCopy.assistantReply}
+>
+  <button
+    type="button"
+    class="avatar-toggle"
+    data-avatar-toggle
+    aria-expanded="false"
+    aria-controls="avatar-panel"
+    aria-label={labels.mascotAction}
+  >
+    <span class="avatar-crop avatar-crop--silver persona-silver">
+      <img src={href('images/silver-480.webp')} width="480" height="640" alt="" loading="lazy" decoding="async" />
+    </span>
+    <span class="avatar-crop avatar-crop--ocean persona-ocean">
+      <img src={href('images/ocean-480.webp')} width="480" height="853" alt="" loading="lazy" decoding="async" />
+    </span>
+    <span class="avatar-ring" aria-hidden="true"></span>
+    <span class="avatar-dot" aria-hidden="true"></span>
+  </button>
+
+  <p class="avatar-bubble" data-avatar-bubble role="status" hidden></p>
+
+  <section id="avatar-panel" class="avatar-panel glass-3" aria-labelledby="avatar-panel-title" hidden>
+    <header class="avatar-panel-head">
+      <div>
+        <h2 id="avatar-panel-title">{introCopy.workspace}</h2>
+        <p>{labels.localNote}</p>
+      </div>
+      <button type="button" class="avatar-close" data-avatar-close aria-label={labels.collapseChat}>
+        <Icon name="close" size={18} />
+      </button>
+    </header>
+
+    <div class="avatar-log" data-avatar-log role="log" aria-live="polite" aria-relevant="additions"></div>
+
+    <div class="avatar-asks">
+      <button type="button" data-avatar-ask="latest">{labels.asks.latest}</button>
+      <button type="button" data-avatar-ask="shelf">{labels.asks.shelf}</button>
+      <button type="button" data-avatar-ask="whale">{labels.asks.whale}</button>
+    </div>
+
+    <div class="avatar-templates" hidden>
+      <template data-answer="latest">{latestAnswer}</template>
+      <template data-answer="shelf">{shelfAnswer}</template>
+      <template data-answer="whale">{whaleAnswer}</template>
+    </div>
+
+    <footer class="avatar-panel-foot">
+      <a class="avatar-enter" data-entry-now href={href()}>
+        <span>{labels.enterButton}</span>
+        <Icon name="arrow" size={17} />
+      </a>
+      <nav class="avatar-panel-links" aria-label="博客栏目">
+        <a href={href('posts/')}>{labels.navLabels.posts}</a>
+        <a href={href('archive/')}>{labels.navLabels.archive}</a>
+        <a href={href('about/')}>{labels.navLabels.about}</a>
+      </nav>
+    </footer>
+  </section>
+</div>

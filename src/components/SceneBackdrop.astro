@@ -1,0 +1,28 @@
+---
+import { href } from '../lib/paths.js';
+
+interface Props {
+  priority?: boolean;
+}
+
+const { priority = false } = Astro.props;
+---
+
+<div class="scene" aria-hidden="true">
+  <picture class="scene-picture">
+    <source media="(max-width: 820px)" srcset={href('images/motion-v2/tide-atelier-portrait-1080.webp')} />
+    <img
+      src={href('images/motion-v2/tide-atelier-1600.webp')}
+      sizes="100vw"
+      width="1600"
+      height="900"
+      alt=""
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : undefined}
+      decoding="async"
+    />
+  </picture>
+  <div class="scene-caustics"></div>
+  <div class="scene-veil"></div>
+  <div class="scene-flash"></div>
+</div>

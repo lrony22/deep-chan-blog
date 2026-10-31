@@ -1,0 +1,124 @@
+---
+import type { HTMLTag } from 'astro/types';
+
+interface Part {
+  text: string;
+  class?: string;
+  group?: string | number;
+}
+
+interface Props {
+  as?: HTMLTag;
+  text?: string;
+  parts?: Part[];
+  mode?: 'char' | 'word';
+  stagger?: number;
+  delay?: number;
+  id?: string;
+  class?: string;
+  reveal?: boolean;
+}
+
+const {
+  as = 'span',
+  text = '',
+  parts,
+  mode = 'char',
+  stagger = 28,
+  delay = 0,
+  id,
+  class: className,
+  reveal = true,
+} = Astro.props;
+
+const Tag = as;
+const sourceParts: Part[] = parts?.length ? parts : [{ text }];
+const punctuation = /[，。！？；：、,.!?;:…」』”’）】》]/u;
+const charCount = sourceParts.reduce((total, part) => total + [...part.text].length, 0);
+const useWord = mode === 'word' || charCount > 24;
+
+type SegmenterLike = { segment(input: string): Iterable<{ segment: string }> };
+let segmenter: SegmenterLike | undefined;
+if (useWord) {
+  try {
+    const Segmenter = (Intl as unknown as { Segmenter?: new (locale: string, options: { granularity: string }) => SegmenterLike }).Segmenter;
+    segmenter = Segmenter ? new Segmenter('zh-CN', { granularity: 'word' }) : undefined;
+  } catch {
+    segmenter = undefined;
+  }
+}
+
+type Unit = { text: string; cls?: string; space?: boolean; group?: string | number; index: number };
+const units: Unit[] = [];
+const pushUnit = (value: string, cls?: string, group?: string | number, space = false) => {
+  units.push({ text: value, cls, group, space, index: units.length });
+};
+
+for (const part of sourceParts) {
+  if (useWord && segmenter) {
+    for (const { segment } of segmenter.segment(part.text)) {
+      pushUnit(segment, part.class, part.group, /^\s+$/u.test(segment));
+    }
+    continue;
+  }
+
+  if (useWord) {
+    const chunks = part.text.split(/(\s+)/u);
+    for (const chunk of chunks) {
+      if (!chunk) continue;
+      pushUnit(chunk, part.class, part.group, /^\s+$/u.test(chunk));
+    }
+    continue;
+  }
+
+  for (const character of part.text) {
+    if (/^\s+$/u.test(character)) {
+      pushUnit(character, part.class, part.group, true);
+      continue;
+    }
+    const previous = units.at(-1);
+    if (punctuation.test(character) && previous && !previous.space && previous.group === part.group) {
+      previous.text += character;
+      continue;
+    }
+    pushUnit(character, part.class, part.group);
+  }
+}
+
+type Block = { group?: string | number; units: Unit[] };
+const blocks: Block[] = [];
+for (const unit of units) {
+  const last = blocks.at(-1);
+  if (unit.group !== undefined && unit.group !== null && last && last.group === unit.group) {
+    last.units.push(unit);
+  } else {
+    blocks.push({ group: unit.group, units: [unit] });
+  }
+}
+
+const fullText = sourceParts.map(part => part.text).join('');
+---
+
+<Tag
+  id={id}
+  class:list={[className, 'split-title']}
+  data-reveal={reveal ? 'split' : undefined}
+  style={`--reveal-delay:${delay}ms;--reveal-stagger:${stagger}ms`}
+>
+  <span class="sr-only">{fullText}</span>
+  <span class="split" aria-hidden="true">
+    {blocks.map(block => (
+      block.group !== undefined && block.group !== null
+        ? (
+          <span class="split-keep">
+            {block.units.map(unit => unit.space ? unit.text : (
+              <span class:list={['split-u', unit.cls]} style={`--i:${unit.index}`}>{unit.text}</span>
+            ))}
+          </span>
+        )
+        : block.units.map(unit => unit.space ? unit.text : (
+          <span class:list={['split-u', unit.cls]} style={`--i:${unit.index}`}>{unit.text}</span>
+        ))
+    ))}
+  </span>
+</Tag>

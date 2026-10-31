@@ -1,0 +1,96 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Comments from '../../components/Comments.astro';
+import SplitText from '../../components/SplitText.astro';
+import Icon from '../../components/Icon.astro';
+import copy from '../../data/letterhouse-copy.json';
+import { visiblePosts, displayDate, readingMinutes } from '../../lib/content.js';
+import { href } from '../../lib/paths.js';
+
+export async function getStaticPaths() {
+  const posts = visiblePosts(await getCollection('blog'));
+  return posts.map((post, index) => ({
+    params: { slug: post.id },
+    props: { post, previous: posts[index + 1], next: posts[index - 1] },
+  }));
+}
+
+const { post, previous, next } = Astro.props;
+const { Content, headings } = await render(post);
+const { article: articleCopy } = copy;
+const readingLabel = articleCopy.readingMinutesTemplate.replace('{minutes}', String(readingMinutes(post.body)));
+const coverQuote = articleCopy.coverQuotes[post.data.cover];
+const sectionHeadings = headings.filter(heading => heading.depth === 2 || heading.depth === 3);
+const publishedDate = displayDate(post.data.pubDate);
+---
+
+<BaseLayout title={post.data.title} description={post.data.description} active='posts' article>
+  <div class="page-grid page-grid--article">
+    <div class="page-stream article-main">
+      <a class="back-link" href={href('posts/')}>
+        <Icon name="arrow" size={16} />{articleCopy.backLink}
+      </a>
+
+      <header class="article-header">
+        <span class="category-label">{post.data.category}</span>
+        <SplitText as="h1" text={post.data.title} mode="word" stagger={60} />
+        <p class="article-lead">{post.data.description}</p>
+        <div class="article-meta">
+          <span class="author-avatar">{articleCopy.authorName.slice(0, 1)}</span>
+          <span>{articleCopy.authorName}</span>
+          <span class="meta-divider" aria-hidden="true"></span>
+          <time datetime={post.data.pubDate.toISOString()}>{publishedDate}</time>
+          <span class="meta-divider" aria-hidden="true"></span>
+          <span><Icon name="clock" size={14} />{readingLabel}</span>
+          {post.data.demo && <span class="demo-tag">{articleCopy.demoBadge}</span>}
+        </div>
+        <div class="article-tags">
+          {post.data.tags.map(tag => <a href={href('posts/?tag=' + encodeURIComponent(tag))}>#{tag}</a>)}
+        </div>
+        {coverQuote && <p class="article-quote">{coverQuote}</p>}
+      </header>
+
+      {sectionHeadings.length > 0 && (
+        <aside class="article-toc" aria-label={articleCopy.tocHeading}>
+          <span class="tiny-label">{articleCopy.tocHeading}</span>
+          <nav aria-label={articleCopy.tocHeading}>
+            {sectionHeadings.map(heading => (
+              <a href={'#' + heading.slug} class:list={{ 'toc-sub': heading.depth === 3 }}>
+                {heading.text}
+              </a>
+            ))}
+          </nav>
+          <a class='toc-top' href='#main'>{articleCopy.tocTop}</a>
+        </aside>
+      )}
+
+      <article class="prose" id="article-content" data-reveal="fade">
+        <Content />
+        <div class="article-endmark">{articleCopy.endmark}</div>
+      </article>
+
+      <nav class="post-pagination" aria-label={articleCopy.pagination.prevLabel + ' / ' + articleCopy.pagination.nextLabel}>
+        <div>
+          {previous && (
+            <a href={href('posts/' + previous.id + '/')}>
+              <span>{articleCopy.pagination.prevLabel}</span>
+              <strong>{previous.data.title}</strong>
+            </a>
+          )}
+        </div>
+        <div>
+          {next && (
+            <a href={href('posts/' + next.id + '/')}>
+              <span>{articleCopy.pagination.nextLabel}</span>
+              <strong>{next.data.title}</strong>
+            </a>
+          )}
+        </div>
+      </nav>
+
+      <Comments discussionKey={'post:' + post.id} />
+    </div>
+  </div>
+  <script src='../../scripts/article.js'></script>
+</BaseLayout>

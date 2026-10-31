@@ -1,0 +1,58 @@
+---
+import '@fontsource-variable/noto-serif-sc';
+import '@fontsource-variable/noto-sans-sc';
+import '../styles/global.css';
+import SceneBackdrop from '../components/SceneBackdrop.astro';
+import SiteRail from '../components/SiteRail.astro';
+import MobileTopbar from '../components/MobileTopbar.astro';
+import TabBar from '../components/TabBar.astro';
+import Footer from '../components/Footer.astro';
+import Cover from '../components/Cover.astro';
+import { siteConfig } from '../config.js';
+import { href } from '../lib/paths.js';
+const { title, description = siteConfig.description, active, home = false, article = false } = Astro.props;
+const fullTitle = title ? `${title} · ${siteConfig.title}` : `${siteConfig.title} — ${siteConfig.author}的个人博客`;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const page = article ? 'article' : active === 'home' ? 'home' : active === 'posts' ? 'list' : active === 'about' ? 'about' : 'other';
+---
+<!doctype html>
+<html lang="zh-CN" data-theme="light" data-persona="silver">
+  <head>
+    <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content={description}/><meta name="theme-color" content="#f3f7fd"/><meta name="color-scheme" content="light dark"/>
+    <title>{fullTitle}</title>{canonical && <link rel="canonical" href={canonical}/>}
+    <meta property="og:title" content={fullTitle}/><meta property="og:description" content={description}/><meta property="og:type" content={article ? 'article' : 'website'}/>{canonical && <meta property="og:url" content={canonical}/>}
+    <link rel="icon" type="image/svg+xml" href={href('favicon.svg')}/><link rel="alternate" type="application/rss+xml" title="深蓝来信 RSS" href={href('rss.xml')}/>
+    <script is:inline>
+      (()=>{let mode='auto',persona='silver';try{mode=localStorage.getItem('blue-mode')||'auto';if(localStorage.getItem('blue-unlocked')==='true')persona=localStorage.getItem('blue-persona')||'silver';}catch{}if(!['auto','light','dark'].includes(mode))mode='auto';if(!['silver','ocean'].includes(persona))persona='silver';const theme=mode==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):mode;document.documentElement.dataset.theme=theme;document.documentElement.dataset.mode=mode;document.documentElement.dataset.persona=persona;document.documentElement.classList.add('js');})();
+    </script>
+    {home && <script is:inline>
+      (()=>{let seen=false;try{seen=sessionStorage.getItem('blue-cover-seen')==='true';}catch{}
+      if(!seen){document.documentElement.dataset.coverPending='true';document.documentElement.dataset.arrive='hold';}
+      const protect=()=>{const root=document.documentElement;if(root.dataset.introReady)return;setTimeout(()=>{if(root.dataset.coverPending&&!root.dataset.introReady){delete root.dataset.coverPending;delete root.dataset.arrive;const cover=document.getElementById('opening-cover');if(cover){cover.hidden=true;cover.removeAttribute('data-boot');}document.body.classList.remove('cover-open');const site=document.getElementById('site-content');if(site)site.inert=false;root.classList.add('reveal-all');}},4000);};
+      // Deferred modules get their first opportunity to initialize before failure recovery starts.
+      if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',protect,{once:true});else protect();})();
+    </script>}
+    <script is:inline>
+      window.__dshRevealFallback = setTimeout(()=>{
+        if(!document.documentElement.dataset.motionReady)document.documentElement.classList.add('reveal-all');
+      },3000);
+    </script>
+    <slot name="head"/>
+  </head>
+  <body data-home={home ? 'true' : 'false'} data-page={page}>
+    <a class="skip-link" href="#main">跳到正文</a>
+    <SceneBackdrop priority={page === 'home'} />
+    <div id="site-content" class="site-frame">
+      <SiteRail active={active} page={page} />
+      <div class="main-col">
+        <MobileTopbar />
+        <main id="main" tabindex="-1"><slot/></main>
+        <Footer />
+      </div>
+      <TabBar active={active} />
+    </div>
+    <Cover/><div class="toast" id="toast" role="status" hidden></div>
+    <script src="../scripts/site.js"></script>
+  </body>
+</html>

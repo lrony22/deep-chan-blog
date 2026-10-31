@@ -1,0 +1,11 @@
+---
+import { siteConfig } from '../config.js';
+import Icon from './Icon.astro';
+const { discussionKey } = Astro.props;
+const config = siteConfig.comments;
+const configured = config.enabled && config.repo && config.repoId && config.categoryId;
+---
+<section class="comments-section" aria-labelledby="comments-heading" data-comments data-configured={configured ? 'true' : 'false'} data-repo={config.repo} data-repo-id={config.repoId} data-category={config.category} data-category-id={config.categoryId} data-term={discussionKey}>
+  <div class="comments-heading"><div><span class="tiny-label">LET’S TALK</span><h2 id="comments-heading">留一点回声。</h2></div><Icon name="mail" size={28}/></div>
+  {configured ? <><p>你的想法，也是这封信的一部分。评论由 GitHub Discussions 提供。</p><button class="button-outline" data-load-comments>加载评论</button><p class="comments-status" role="status" data-comments-status></p><div class="giscus"></div><noscript>评论需要 JavaScript 和 GitHub 登录。</noscript></> : <div class="comments-unconfigured"><span class="status-dot"></span><p>信箱正在准备中。<span>评论开放后，就能在这里留下你的想法。</span></p></div>}
+</section>

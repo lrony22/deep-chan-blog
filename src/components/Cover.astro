@@ -1,0 +1,188 @@
+---
+import { getCollection } from 'astro:content';
+import { href } from '../lib/paths.js';
+import { visiblePosts, groupByYear, displayDate } from '../lib/content.js';
+import copy from '../data/intro-copy.json';
+import composerLabels from '../data/composer-labels.json';
+import Whale from './Whale.astro';
+import SplitText from './SplitText.astro';
+import AvatarDock from './AvatarDock.astro';
+import '../styles/intro.css';
+
+const labels = copy.labels;
+const posts = visiblePosts(await getCollection('blog'));
+const latest = posts[0];
+const latestDate = latest ? displayDate(latest.data.pubDate) : '';
+---
+
+<section
+  id="opening-cover"
+  class="opening-cover harness-intro"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="cover-heading"
+  data-intro-state="boot"
+  data-boot="play"
+  tabindex="-1"
+  hidden
+>
+  <div class="harness-layout" data-entry-background>
+    <aside class="harness-sidebar glass-1" aria-label="工坊导航">
+      <div class="harness-brand">
+        <Whale size={22} class="harness-brand-icon" />
+        <span class="harness-brand-text">
+          <strong class="harness-brand-title">{copy.workspace}</strong>
+        </span>
+      </div>
+
+      <nav class="harness-nav-links" aria-label="博客栏目">
+        <a href={href('posts/')} class="harness-nav-item">
+          <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M3 2.5h10v11H3zM5.5 5.5h5M5.5 8h5M5.5 10.5h3" />
+          </svg>
+          <span>{labels.navLabels.posts}</span>
+        </a>
+        <a href={href('archive/')} class="harness-nav-item">
+          <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M2.5 4h11v3h-11zM4 7v6h8V7M6 9.5h4" />
+          </svg>
+          <span>{labels.navLabels.archive}</span>
+        </a>
+        <a href={href('about/')} class="harness-nav-item">
+          <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <circle cx="8" cy="8" r="6" />
+            <path d="M8 7v4M8 5h.01" />
+          </svg>
+          <span>{labels.navLabels.about}</span>
+        </a>
+      </nav>
+
+      <section class="harness-session" aria-labelledby="session-heading">
+        <p id="session-heading" class="harness-section-label">{labels.sessionLabel}</p>
+        <div class="harness-session-item" aria-current="page">
+          <span class="harness-session-mark" aria-hidden="true"></span>
+          <span class="harness-session-name">{copy.title}</span>
+        </div>
+      </section>
+    </aside>
+
+    <div class="harness-main" role="group" aria-label={labels.sessionLabel}>
+      <header class="harness-topbar glass-1">
+        <div class="harness-topbar-title">
+          <span class="harness-topbar-workspace">{copy.workspace}</span>
+          <span class="harness-divider" aria-hidden="true">/</span>
+          <span class="harness-topbar-current">{copy.title}</span>
+        </div>
+        <button type="button" class="harness-skip-button" id="cover-enter">
+          {labels.skipLabel}
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+            <path d="M3 8h10M9 4l4 4-4 4" />
+          </svg>
+        </button>
+      </header>
+
+      <div class="harness-tabbar">
+        <span class="harness-tab is-active" aria-current="page">对话</span>
+        <span class="harness-tab-summary">{labels.traceSummary}</span>
+      </div>
+
+      <div class="harness-stage">
+        <div class="harness-conversation">
+          <section class="harness-welcome" data-intro-welcome>
+            <div class="cover-art" data-cover-art>
+              <img
+                src={href('images/motion-v2/letter-desk-960.webp')}
+                srcset={`${href('images/motion-v2/letter-desk-480.webp')} 480w, ${href('images/motion-v2/letter-desk-960.webp')} 960w`}
+                sizes="(max-width: 820px) 200px, 300px"
+                width="960"
+                height="720"
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <SplitText
+              as="h1"
+              id="cover-heading"
+              class="harness-welcome-title cover-title"
+              text={copy.title}
+              mode="char"
+              stagger={40}
+              reveal={false}
+            />
+            <p class="harness-welcome-subtitle">{copy.subtitle}</p>
+          </section>
+
+          <div
+            id="intro-log"
+            class="harness-log"
+            data-intro-log
+            role="log"
+            aria-label={labels.traceSummary}
+            aria-live="off"
+          ></div>
+        </div>
+      </div>
+
+      <div class="harness-composer-container">
+        <form class="harness-composer-form" data-intro-form aria-label={labels.composerLabel}>
+          <div class="harness-composer-inner">
+            <div class="harness-composer-editor">
+              <div class="harness-composer-mirror" data-intro-mirror aria-hidden="true">
+                <span data-intro-mirror-text></span><span class="harness-input-caret"></span>
+              </div>
+              <textarea
+                id="intro-composer"
+                class="harness-composer-input"
+                data-intro-input
+                readonly
+                rows="2"
+                placeholder={labels.inputHint}
+                aria-label={labels.composerLabel}
+              ></textarea>
+            </div>
+            <div class="harness-composer-controls">
+              <div class="harness-composer-controls-left">
+                <span class="harness-composer-icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M8 3v10M3 8h10" />
+                  </svg>
+                </span>
+                <span class="harness-composer-icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4">
+                    <path d="M8 1.8 13 3.7v3.7c0 3.2-2.2 5.6-5 6.8-2.8-1.2-5-3.6-5-6.8V3.7z" />
+                    <path d="m5.7 7.8 1.5 1.5 3.2-3.2" />
+                  </svg>
+                </span>
+                <span class="harness-composer-mode" data-composer-mode>{composerLabels.mode.label}</span>
+              </div>
+              <div class="harness-composer-controls-right">
+                <span class="harness-composer-status" data-composer-status>{composerLabels.status.label}</span>
+                <button
+                  type="button"
+                  class="harness-composer-send"
+                  data-intro-send
+                  aria-label={composerLabels.action.ariaLabel}
+                  title={composerLabels.action.label}
+                >
+                  <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path d="M8 13V3M4 7l4-4 4 4" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="tide-ring" data-tide-ring aria-hidden="true"></div>
+
+  <AvatarDock
+    latestTitle={latest?.data.title}
+    latestDate={latestDate}
+    count={posts.length}
+    years={groupByYear(posts).length}
+  />
+</section>

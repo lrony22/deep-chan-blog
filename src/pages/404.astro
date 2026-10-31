@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { href } from '../lib/paths.js';
+import Whale from '../components/Whale.astro';
+import SplitText from '../components/SplitText.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<BaseLayout title="这封信迷路了">
+  <div class="page-grid page-grid--single">
+    <section class="not-found" data-reveal="fade">
+      <Whale size={96} />
+      <span class="tiny-label">404 / LOST AT SEA</span>
+      <SplitText
+        as="h1"
+        parts={[{ text: '这封信，' }, { text: '好像漂远了。', class: 'split-hl' }]}
+        mode="word"
+        stagger={60}
+      />
+      <p>别担心，海面上还有很多故事等着被发现。</p>
+      <div class="not-found-actions">
+        <a class="button-primary" href={href()}>回到首页 <Icon name="arrow" size={18} /></a>
+        <a class="link-arrow" href={href('posts/')}>看看其他来信</a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

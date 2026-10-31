@@ -1,0 +1,25 @@
+---
+import copy from '../data/letterhouse-copy.json';
+
+const { variant = 'rail' } = Astro.props;
+const { header } = copy;
+const modes = [
+  { id: 'auto', ...header.themeModes.auto },
+  { id: 'light', ...header.themeModes.light },
+  { id: 'dark', ...header.themeModes.dark },
+];
+---
+
+<div class:list={['modes', 'modes--' + variant]} role="group" aria-label={header.themeSwitchAria}>
+  {modes.map(mode => (
+    <button
+      type="button"
+      data-mode={mode.id}
+      aria-label={mode.aria}
+      title={mode.title}
+      aria-pressed={mode.id === 'auto' ? 'true' : 'false'}
+    >
+      {variant === 'topbar' ? mode.short : mode.label}
+    </button>
+  ))}
+</div>

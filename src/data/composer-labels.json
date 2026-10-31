@@ -1,0 +1,18 @@
+{
+  "attachment": {
+    "label": "添加附件（演示不可用）",
+    "tooltip": "当前为演示模式",
+    "interactive": false
+  },
+  "mode": {
+    "label": "只读演示",
+    "tooltip": "序章导览模式"
+  },
+  "status": {
+    "label": "deep酱已就绪"
+  },
+  "action": {
+    "label": "进入博客首页",
+    "ariaLabel": "点击进入博客首页"
+  }
+}

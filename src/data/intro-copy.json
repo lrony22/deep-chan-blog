@@ -1,0 +1,76 @@
+{
+  "workspace": "deep酱的工作台",
+  "title": "深蓝来信",
+  "subtitle": "在代码与文字的留白处，遇见一片深蓝",
+  "firstPrompt": "deep酱，今天在整理些什么？",
+  "firstSteps": [
+    {
+      "kind": "thinking",
+      "label": "思考",
+      "text": "梳理近期随笔与技术记录，核对正文排版和阅读留白。"
+    },
+    {
+      "kind": "command",
+      "label": "运行命令",
+      "text": "ls -l src/content/blog"
+    },
+    {
+      "kind": "search",
+      "label": "网页搜索",
+      "text": "中文博客 舒适正文字号 行高规范"
+    },
+    {
+      "kind": "browse",
+      "label": "网页获取",
+      "text": "查看 /about/ 与 /archive/ 页面结构，确认归档分类与导航畅通"
+    },
+    {
+      "kind": "done",
+      "label": "完成",
+      "text": "文章列表与页面索引就绪，可以随时翻阅。"
+    }
+  ],
+  "assistantReply": "近期的随笔与手记都已归档排好。字句间留了足够安静的呼吸，随时可以启程翻阅。",
+  "drafts": [
+    "想在安静的夜晚，写一篇关于字体排版与留白的小记。",
+    "记一次静态站点构建优化的实际体验与踩坑。",
+    "窗前的海蓝微光与代码片段，待会儿整理成随笔。",
+    "把最近读到的一篇关于交互设计的有趣文章记下来。",
+    "在快节奏的日常里，为文字保留一片舒适的阅读角落。"
+  ],
+  "labels": {
+    "skipLabel": "跳过序章",
+    "enterButton": "进入博客首页",
+    "entryTitle": "深蓝来信 · 序章",
+    "entryTerminalTitle": "deep-agent-session",
+    "entryStatus": "agent调用工具：正在等待进入博客",
+    "entryPrompt": "agent调用工具：正在等待进入博客",
+    "countdownTemplate": "{seconds} 秒后自动前往，或点击下方按钮",
+    "inputHint": "这里是本地演示 · 按回车或右侧按钮进入博客",
+    "composerLabel": "输入框",
+    "traceSummary": "系统准备轨迹 (5 项操作)",
+    "mascotAction": "与 deep酱 对话",
+    "sessionLabel": "当前会话",
+    "demoLabel": "演示已暂停，随时可进入博客",
+    "replayLabel": "重播序章",
+    "composerNudge": "这里只是本地演示，不会发送内容。想读信，就点「进入博客首页」。",
+    "collapseChat": "收起对话",
+    "avatarHello": "点我，可以聊几句。",
+    "localNote": "本地演示 · 不联网，回复是预先写好的",
+    "asks": {
+      "latest": "最近写了什么",
+      "shelf": "这里有什么",
+      "whale": "小鲸鱼的秘密"
+    },
+    "answers": {
+      "latest": "最新一封是《{title}》，写于 {date}。",
+      "shelf": "现在有 {count} 封来信，分在 {years} 个年份里。"
+    },
+    "mascotAlt": "银白长发、佩戴蓝色鲸鱼发饰的 deep酱，微笑伸手欢迎",
+    "navLabels": {
+      "posts": "文章",
+      "archive": "归档",
+      "about": "关于"
+    }
+  }
+}

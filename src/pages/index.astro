@@ -1,0 +1,117 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PersonaFigure from '../components/PersonaFigure.astro';
+import SplitText from '../components/SplitText.astro';
+import YearStream from '../components/YearStream.astro';
+import SiteAside from '../components/SiteAside.astro';
+import Icon from '../components/Icon.astro';
+import copy from '../data/letterhouse-copy.json';
+import { visiblePosts, groupByYear, displayDate } from '../lib/content.js';
+import { href } from '../lib/paths.js';
+
+const posts = visiblePosts(await getCollection('blog'));
+const featured = posts.find(post => post.data.featured) || posts[0];
+const streamPosts = (featured ? posts.filter(post => post.id !== featured.id) : posts).slice(0, 8);
+const allGroups = groupByYear(posts);
+const totals = new Map<number, number>();
+for (const [year, entries] of allGroups) totals.set(year, entries.length);
+const streamGroups = groupByYear(streamPosts);
+const tags = [...new Set(posts.flatMap(post => post.data.tags))];
+const { home, posts: postsCopy, article } = copy;
+const featuredQuote = featured ? article.coverQuotes[featured.data.cover] : '';
+const titleParts = [
+  { text: home.titleLine1 + '，', group: 'line-1' },
+  { text: home.titleLine2, group: 'line-2' },
+  { text: home.titleHighlight, class: 'split-hl', group: 'line-2' },
+  { text: '。', group: 'line-2' },
+];
+---
+
+<BaseLayout active="home" home>
+  <div class="page-grid">
+    <div class="page-stream">
+      <form class="searchbar" role="search" action={href('posts/')} method="get">
+        <Icon name="search" size={18} />
+        <label class="sr-only" for="home-search">{postsCopy.searchAria}</label>
+        <input
+          id="home-search"
+          type="search"
+          name="q"
+          data-search-shortcut
+          placeholder={postsCopy.searchPlaceholder}
+          autocomplete="off"
+        />
+        <span class="kbd" aria-hidden="true">/</span>
+      </form>
+
+      <nav class="chips" aria-label={home.tagsAria}>
+        <a class="chip" href={href('posts/')} aria-current="true" data-reveal="chip" style="--i:0">{postsCopy.allTagsLabel}</a>
+        {tags.map((tag, index) => (
+          <a
+            class="chip"
+            href={href('posts/?tag=' + encodeURIComponent(tag))}
+            data-reveal="chip"
+            style={`--i:${index + 1}`}
+          >{tag}</a>
+        ))}
+      </nav>
+
+      <div class="home-intro">
+        <section class="welcome" aria-labelledby="welcome-title">
+          <PersonaFigure />
+          <div class="welcome-copy">
+            <p class="eyebrow">{home.eyebrow}</p>
+            <SplitText
+              as="h1"
+              id="welcome-title"
+              class="welcome-title"
+              parts={titleParts}
+              mode="char"
+              stagger={28}
+              reveal={false}
+            />
+            <p class="welcome-desc">{home.description}</p>
+          </div>
+        </section>
+
+        <div class="welcome-art" aria-hidden="true">
+          <img
+            src={href('images/motion-v2/letter-desk-960.webp')}
+            srcset={`${href('images/motion-v2/letter-desk-480.webp')} 480w, ${href('images/motion-v2/letter-desk-960.webp')} 960w`}
+            sizes="(max-width: 620px) 200px, 240px"
+            width="960"
+            height="720"
+            alt=""
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+      </div>
+
+      {featured && (
+        <article class="feature" aria-labelledby="featured-title">
+          <div class="meta">
+            <span class="eyebrow">{home.featuredSection.badge}</span>
+            <time datetime={featured.data.pubDate.toISOString()}>{displayDate(featured.data.pubDate)}</time>
+            <span>{featured.data.category}</span>
+            {featured.data.demo && <span class="demo-tag">{article.demoBadge}</span>}
+          </div>
+          <h2 id="featured-title">
+            <a class="stretch" href={href('posts/' + featured.id + '/')}>{featured.data.title}</a>
+          </h2>
+          <p>{featured.data.description}</p>
+          {featuredQuote && <q>{featuredQuote}</q>}
+        </article>
+      )}
+
+      <YearStream groups={streamGroups} totals={totals} idPrefix="home-year" reveal />
+
+      <a class="more" href={href('posts/')}>
+        {home.latestSection.viewAll}<Icon name="arrow" size={18} />
+      </a>
+    </div>
+
+    <SiteAside yearGroups={allGroups} />
+  </div>
+</BaseLayout>

@@ -1,0 +1,73 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostEntry from '../../components/PostEntry.astro';
+import SplitText from '../../components/SplitText.astro';
+import SiteAside from '../../components/SiteAside.astro';
+import Icon from '../../components/Icon.astro';
+import copy from '../../data/letterhouse-copy.json';
+import { visiblePosts, groupByYear } from '../../lib/content.js';
+import { href } from '../../lib/paths.js';
+
+const posts = visiblePosts(await getCollection('blog'));
+const allGroups = groupByYear(posts);
+const tags = [...new Set(posts.flatMap(post => post.data.tags))];
+const { posts: postsCopy } = copy;
+const counterText = postsCopy.counterTemplate.replace('{count}', String(posts.length));
+---
+
+<BaseLayout title={postsCopy.titleLead + postsCopy.titleHighlight} description={postsCopy.description} active="posts">
+  <div class="page-grid">
+    <div class="page-stream">
+      <header class="page-heading">
+        <span class="tiny-label">{postsCopy.eyebrow}</span>
+        <SplitText
+          as="h1"
+          parts={[{ text: postsCopy.titleLead }, { text: postsCopy.titleHighlight, class: 'split-hl' }]}
+          mode="word"
+          stagger={60}
+        />
+        <p>{postsCopy.description}</p>
+      </header>
+
+      <form class="searchbar" role="search" action={href('posts/')} method="get">
+        <Icon name="search" size={18} />
+        <label class="sr-only" for="post-search">{postsCopy.searchAria}</label>
+        <input
+          id="post-search"
+          type="search"
+          name="q"
+          data-search-shortcut
+          placeholder={postsCopy.searchPlaceholder}
+          autocomplete="off"
+        />
+        <span class="kbd" aria-hidden="true">/</span>
+      </form>
+      <p class="post-counter" id="post-counter" aria-live="polite">{counterText}</p>
+
+      <div class="chips tag-filters" role="group" aria-label={postsCopy.allTagsLabel}>
+        <button class="chip tag-filter active" data-tag="" aria-pressed="true">{postsCopy.allTagsLabel}</button>
+        {tags.map(tag => (
+          <button class="chip tag-filter" data-tag={tag} aria-pressed="false">{tag}</button>
+        ))}
+      </div>
+
+      <div class="entry-list" id="post-grid" data-index-url={href('search-index.json')}>
+        {posts.map(post => <PostEntry post={post} headingLevel={2} dateFormat="ymd" reveal />)}
+      </div>
+
+      <div id="no-results" class="empty-state" hidden>
+        <Icon name="search" size={36} />
+        <h2>{postsCopy.emptyState.title}</h2>
+        <p>{postsCopy.emptyState.description}</p>
+        <button class="text-button" id="reset-search">{postsCopy.emptyState.resetButton}</button>
+      </div>
+      <p id="search-status" class="search-status" role="status" hidden></p>
+      <noscript><p class="small-note">{postsCopy.noscriptNote}</p></noscript>
+    </div>
+
+    <SiteAside yearGroups={allGroups} />
+  </div>
+
+  <script src="../../scripts/search.js"></script>
+</BaseLayout>

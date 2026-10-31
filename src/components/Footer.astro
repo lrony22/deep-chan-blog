@@ -1,0 +1,37 @@
+---
+import { href } from '../lib/paths.js';
+import Whale from './Whale.astro';
+import Icon from './Icon.astro';
+import copy from '../data/letterhouse-copy.json';
+import introCopy from '../data/intro-copy.json';
+const credits = copy.about.colophon.assetCredits;
+---
+
+<footer class="site-footer">
+  <button
+    type="button"
+    class="whale"
+    data-whale
+    title={copy.footer.whaleSecretTitle}
+    aria-label={copy.footer.whaleSecretAria}
+  ><Whale size={27} /></button>
+
+  <div class="footer-text">
+    <a class="footer-title" href={href()}>{copy.footer.title}</a>
+    <p>{copy.footer.tagline} {copy.footer.description}</p>
+  </div>
+
+  <div class="footer-links">
+    <button type="button" class="footer-link" data-replay>{introCopy.labels.replayLabel}</button>
+    <a class="footer-link" href={href('rss.xml')} aria-label={copy.footer.rssAria}><Icon name="rss" size={18} /></a>
+    <button type="button" class="footer-link" data-persona-toggle hidden>{copy.footer.personaToggleText}</button>
+  </div>
+
+  <p class="fine">© {new Date().getUTCFullYear()} {copy.footer.copyrightAuthor} · {copy.footer.colophonNote}</p>
+  <p class="fine">
+    {credits.mainLabel}：<a href={credits.mainUrl} rel="noreferrer">{credits.mainAuthor}</a> ·
+    {credits.hiddenLabel}：{credits.hiddenAuthors}（<a href={credits.licenseUrl} rel="license">{credits.licenseName}</a>，非商业使用、AI 改编） ·
+    {credits.aiNote} <a href={href('about/#colophon')}>{credits.detailsLabel}</a>
+  </p>
+  <p class="sr-only" role="status" id="theme-announcement"></p>
+</footer>

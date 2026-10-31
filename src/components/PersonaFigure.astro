@@ -1,0 +1,29 @@
+---
+import { href } from '../lib/paths.js';
+import copy from '../data/letterhouse-copy.json';
+
+const { home } = copy;
+---
+
+<figure class="persona-figure persona-figure--curator" data-reveal="clip">
+  <img
+    class="persona-silver persona-portrait"
+    src={href('images/deep-mascot-v2-256.webp')}
+    sizes="128px"
+    width="256"
+    height="384"
+    alt={home.characterSilverAlt}
+    loading="lazy"
+    decoding="async"
+  />
+  <img
+    class="persona-ocean persona-portrait"
+    src={href('images/ocean-480.webp')}
+    sizes="128px"
+    width="480"
+    height="853"
+    alt={home.characterOceanAlt}
+    loading="lazy"
+    decoding="async"
+  />
+</figure>

@@ -1,0 +1,26 @@
+---
+import { href } from '../lib/paths.js';
+import copy from '../data/letterhouse-copy.json';
+import Icon from './Icon.astro';
+
+interface Props {
+  active?: 'home' | 'posts' | 'archive' | 'about' | '';
+}
+
+const { active = '' } = Astro.props;
+const items = [
+  { id: 'home', text: '首页', path: '', icon: 'home' },
+  { id: 'posts', text: '文章', path: 'posts/', icon: 'mail' },
+  { id: 'archive', text: '归档', path: 'archive/', icon: 'archive-list' },
+  { id: 'about', text: '关于', path: 'about/', icon: 'user' },
+];
+---
+
+<nav class="tabbar glass-1" aria-label={copy.header.mobileNavAria}>
+  {items.map(item => (
+    <a href={href(item.path)} aria-current={active === item.id ? 'page' : undefined}>
+      <Icon name={item.icon} size={20} />
+      <span>{item.text}</span>
+    </a>
+  ))}
+</nav>

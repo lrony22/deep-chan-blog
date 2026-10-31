@@ -1,0 +1,40 @@
+---
+import { href } from '../lib/paths.js';
+import { displayDate } from '../lib/content.js';
+import copy from '../data/letterhouse-copy.json';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  headingLevel?: 2 | 3;
+  dateFormat?: 'md' | 'ymd';
+  reveal?: boolean;
+}
+
+const { post, headingLevel = 3, dateFormat = 'md', reveal = false } = Astro.props;
+const Heading = headingLevel === 2 ? 'h2' : 'h3';
+const published = new Date(post.data.pubDate);
+const monthDay = `${String(published.getUTCMonth() + 1).padStart(2, '0')}.${String(published.getUTCDate()).padStart(2, '0')}`;
+const dateLabel = dateFormat === 'ymd' ? displayDate(post.data.pubDate) : monthDay;
+---
+
+<article
+  class:list={['entry', dateFormat === 'ymd' ? 'entry--ymd' : '']}
+  data-post-id={post.id}
+  data-reveal={reveal ? 'rise' : undefined}
+>
+  <time datetime={post.data.pubDate.toISOString()}>{dateLabel}</time>
+  <div class="entry-body">
+    <Heading>
+      <a class="stretch" href={href('posts/' + post.id + '/')}>{post.data.title}</a>
+    </Heading>
+    <p>{post.data.description}</p>
+    <div class="entry-meta">
+      <span>{post.data.category}</span>
+      {post.data.tags.map(tag => (
+        <a href={href('posts/?tag=' + encodeURIComponent(tag))}>#{tag}</a>
+      ))}
+      {post.data.demo && <span class="demo-tag">{copy.posts.demoShort}</span>}
+    </div>
+  </div>
+</article>

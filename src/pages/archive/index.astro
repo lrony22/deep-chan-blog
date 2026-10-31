@@ -1,0 +1,104 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SplitText from '../../components/SplitText.astro';
+import Icon from '../../components/Icon.astro';
+import copy from '../../data/letterhouse-copy.json';
+import { visiblePosts, groupByYear, displayDate } from '../../lib/content.js';
+import { href } from '../../lib/paths.js';
+
+const posts = visiblePosts(await getCollection('blog'));
+const { archive: archiveCopy } = copy;
+const yearGroups = groupByYear(posts).map(([year, entries]) => {
+  const months: { month: number; posts: CollectionEntry<'blog'>[] }[] = [];
+  for (const post of entries) {
+    const month = post.data.pubDate.getUTCMonth() + 1;
+    let group = months[months.length - 1];
+    if (!group || group.month !== month) {
+      group = { month, posts: [] };
+      months.push(group);
+    }
+    group.posts.push(post);
+  }
+  return { year, months, entries };
+});
+const monthLabel = (month: number) => archiveCopy.monthFormat.replace('{month}', String(month));
+const archiveLinks = yearGroups.flatMap(({ year, months }) => [
+  { id: 'archive-year-' + year, label: String(year) },
+  ...months.map(({ month }) => ({
+    id: 'archive-month-' + year + '-' + month,
+    label: monthLabel(month),
+  })),
+]);
+---
+
+<BaseLayout title={archiveCopy.titleLead + archiveCopy.titleHighlight} description={archiveCopy.description} active='archive'>
+  <div class="page-grid page-grid--archive">
+    <div class="page-stream">
+      <header class="page-heading">
+        <span class="tiny-label">{archiveCopy.eyebrow}</span>
+        <SplitText
+          as="h1"
+          parts={[{ text: archiveCopy.titleLead }, { text: archiveCopy.titleHighlight, class: 'split-hl' }]}
+          mode="word"
+          stagger={60}
+        />
+        <p>{archiveCopy.description}</p>
+      </header>
+
+      <div class="archive-intro" data-reveal="rise">
+        <span class="archive-total" aria-hidden="true">{String(posts.length).padStart(2, '0')}</span>
+        <div>
+          <p>{archiveCopy.collectionCounter.replace('{count}', String(posts.length))}</p>
+          <span>{archiveCopy.collectionNote}</span>
+        </div>
+      </div>
+
+      {archiveLinks.length > 0 && (
+        <nav class="archive-nav archive-nav--inline" aria-label={archiveCopy.navAria}>
+          {archiveLinks.map(link => <a href={'#' + link.id}>{link.label}</a>)}
+        </nav>
+      )}
+
+      <div class="archive-years">
+        {yearGroups.length === 0 && <p class="small-note">{archiveCopy.emptyState}</p>}
+        {yearGroups.map(({ year, months, entries }) => (
+          <section class="year archive-year" id={'archive-year-' + year} aria-labelledby={'archive-heading-' + year}>
+            <h2 id={'archive-heading-' + year}>
+              {year}
+              <small>{archiveCopy.yearUnit.replace('{count}', String(entries.length))}</small>
+            </h2>
+            <div class="archive-entries">
+              {months.map(({ month, posts: monthPosts }) => (
+                <>
+                  <div class="month-label" id={'archive-month-' + year + '-' + month}>
+                    {monthLabel(month)}
+                  </div>
+                  {monthPosts.map(post => (
+                    <a class="archive-row" href={href('posts/' + post.id + '/')}>
+                      <time datetime={post.data.pubDate.toISOString()}>
+                        {displayDate(post.data.pubDate, { year: undefined })}
+                      </time>
+                      <span class="archive-post-title">
+                        {post.data.title}
+                        <span class="archive-category"><span class="sr-only">，分类：</span>{post.data.category}</span>
+                      </span>
+                      <Icon name="diagonal" size={18} />
+                    </a>
+                  ))}
+                </>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+    </div>
+
+    {archiveLinks.length > 0 && (
+      <nav class="archive-nav archive-nav--rail page-aside" aria-label={archiveCopy.navAria}>
+        {archiveLinks.map(link => <a href={'#' + link.id}>{link.label}</a>)}
+      </nav>
+    )}
+  </div>
+</BaseLayout>

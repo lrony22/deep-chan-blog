@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import PostEntry from './PostEntry.astro';
+import copy from '../data/letterhouse-copy.json';
+
+interface Props {
+  groups?: [number, CollectionEntry<'blog'>[]][];
+  totals?: Map<number, number>;
+  idPrefix?: string;
+  reveal?: boolean;
+}
+
+const { groups = [], totals = new Map(), idPrefix = 'year', reveal = false } = Astro.props;
+const countTemplate = copy.home.yearCountTemplate;
+---
+
+{groups.map(([year, posts]) => (
+  <section class="year" aria-labelledby={`${idPrefix}-${year}`}>
+    <h2 id={`${idPrefix}-${year}`}>
+      {year}
+      <small>{countTemplate.replace('{count}', String(totals.get(year) ?? posts.length))}</small>
+    </h2>
+    {posts.length > 0 && (
+      <ol>
+        {posts.map(post => (
+          <li>
+            <PostEntry post={post} headingLevel={3} dateFormat="md" reveal={reveal} />
+          </li>
+        ))}
+      </ol>
+    )}
+  </section>
+))}

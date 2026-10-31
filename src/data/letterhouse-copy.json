@@ -1,0 +1,245 @@
+{
+  "site": {
+    "title": "深蓝来信",
+    "subtitle": "幻想书信馆",
+    "description": "deep酱的个人博客。收藏一点技术、一点日常，和始终未完的好奇。",
+    "author": "deep酱",
+    "tagline": "把好奇写成文字，把日常寄往深蓝。"
+  },
+  "header": {
+    "brandAria": "深蓝来信 首页",
+    "subtitle": "幻想书信馆",
+    "nav": [
+      {
+        "id": "home",
+        "text": "首页",
+        "path": ""
+      },
+      {
+        "id": "posts",
+        "text": "文章",
+        "path": "posts/"
+      },
+      {
+        "id": "archive",
+        "text": "归档",
+        "path": "archive/"
+      },
+      {
+        "id": "about",
+        "text": "关于",
+        "path": "about/"
+      }
+    ],
+    "themeSwitchAria": "外观模式",
+    "themeModes": {
+      "auto": {
+        "aria": "自动：跟随系统",
+        "title": "跟随系统",
+        "label": "自动",
+        "short": "自动"
+      },
+      "light": {
+        "aria": "白天模式",
+        "title": "白天",
+        "label": "白天",
+        "short": "白"
+      },
+      "dark": {
+        "aria": "夜间模式",
+        "title": "夜间",
+        "label": "夜间",
+        "short": "夜"
+      }
+    },
+    "menuToggleAria": "打开导航",
+    "mobileNavAria": "主导航（手机）"
+  },
+  "rail": {
+    "aria": "站点侧轨",
+    "archiveCountTemplate": "{count} 年"
+  },
+  "aside": {
+    "aria": "站点信息",
+    "aboutLink": "馆长档案",
+    "countsTitle": "馆藏来信",
+    "archiveLink": "时间归档"
+  },
+  "footer": {
+    "title": "深蓝来信",
+    "tagline": "蓝色很安静，好奇心也是。",
+    "description": "一点技术，一点日常，一片还没探索完的海。",
+    "noteLabel": "互联网小角落",
+    "noteText": "愿你在这里，遇见片刻的晴朗。",
+    "replayButton": "重播序章",
+    "rssAria": "RSS 订阅",
+    "whaleSecretAria": "向小鲸鱼打招呼，连续三次可发现彩蛋",
+    "whaleSecretTitle": "听说，多打几次招呼，海面会有回声。",
+    "personaToggleText": "切换人设",
+    "copyrightAuthor": "deep酱",
+    "colophonNote": "由 Astro 与好奇心构建"
+  },
+  "home": {
+    "eyebrow": "欢迎路过",
+    "titleLine1": "把代码与日常",
+    "titleHighlight": "来信",
+    "titleLine2": "写成",
+    "description": "这是 deep酱的个人博客，记录代码、日常片段，以及还没想清楚的念头。",
+    "tagsAria": "标签筛选",
+    "yearCountTemplate": "{count} 封来信",
+    "primaryCta": "翻开来信",
+    "secondaryCta": "书信馆档案",
+    "characterSilverAlt": "银白长发、佩戴蓝色鲸鱼发饰的 deep酱，身穿蓝白礼裙",
+    "characterOceanAlt": "深蓝渐变长发、身穿女仆装并带有大鲸尾的 deep酱",
+    "silverLabel": "银蓝来信 · 银白日常",
+    "oceanLabel": "深海回声 · 暗夜女仆",
+    "latestSection": {
+      "eyebrow": "更新",
+      "title": "最近来信",
+      "subtitle": "新近写下的文字。",
+      "viewAll": "全部来信"
+    },
+    "featuredSection": {
+      "eyebrow": "开篇",
+      "badge": "推荐阅读",
+      "readAction": "阅读全文"
+    }
+  },
+  "posts": {
+    "eyebrow": "文章列表",
+    "titleLead": "全部",
+    "titleHighlight": "来信",
+    "description": "收纳技术探索、生活片段，以及还在生长的想法。",
+    "searchAria": "搜索文章标题、摘要或标签",
+    "searchPlaceholder": "寻找一封信，或一点灵感…",
+    "counterTemplate": "共 {count} 封来信",
+    "indexLoadFailure": "搜索暂时没能加载，全部文章仍可阅读。稍后输入可重试。",
+    "allTagsLabel": "全部",
+    "emptyState": {
+      "title": "没有找到匹配的来信",
+      "description": "请尝试其他关键词或分类标签。",
+      "resetButton": "重置筛选 →"
+    },
+    "readingMinutesTemplate": "{minutes} 分钟阅读",
+    "cardReadAria": "阅读：{title}",
+    "demoShort": "示例",
+    "noscriptNote": "当前显示全部文章。搜索和分类筛选需要启用 JavaScript。"
+  },
+  "article": {
+    "backLink": "返回全部来信",
+    "categorySuffix": "· 寄往世界的信件",
+    "coverQuotes": {
+      "tide": "潮汐总会把灵光送上岸。",
+      "window": "生活的光，落在细微处。",
+      "moon": "夜色很深，思绪很轻。",
+      "notebook": "把灵光，写进日常空白处。",
+      "sea": "往前走，总会看见海。",
+      "ribbon": "每一次开始，都值得一封信。"
+    },
+    "authorName": "deep酱",
+    "demoBadge": "示例文章",
+    "readingMinutesTemplate": "{minutes} 分钟阅读",
+    "tocHeading": "信件目录",
+    "tocTop": "回到信首 ↑",
+    "endmark": "谢谢你读到这里",
+    "pagination": {
+      "prevLabel": "← 更早的来信",
+      "nextLabel": "更新的来信 →"
+    },
+    "commentsDisabled": "评论区暂未开启",
+    "codeCopy": {
+      "copy": "复制代码",
+      "copied": "已复制"
+    }
+  },
+  "archive": {
+    "eyebrow": "时间归档",
+    "titleLead": "随时间排开的",
+    "titleHighlight": "来信",
+    "description": "按时间顺序，留存写下的每一篇文字。",
+    "collectionCounter": "馆藏来信 · 共 {count} 封",
+    "collectionNote": "微小但值得留下的记录。",
+    "yearUnit": "{count} 封",
+    "monthFormat": "{month} 月",
+    "emptyState": "航海日志暂无记录",
+    "navAria": "归档年份快速跳转"
+  },
+  "about": {
+    "eyebrow": "作者与站点",
+    "titleLead": "关于我与",
+    "titleHighlight": "深蓝来信",
+    "description": "deep酱、两套人设，以及这个个人博客的来历。",
+    "portraitCaption": "deep酱 · 馆长档案",
+    "ledgerTitle": "手账档案簿",
+    "facts": [
+      {
+        "term": "角色名字",
+        "desc": "deep酱"
+      },
+      {
+        "term": "外观母题",
+        "desc": "银白长发、蓝色鲸鱼发饰与白蓝礼裙；隐藏深海形态带鲸尾与女仆装"
+      },
+      {
+        "term": "书信内容",
+        "desc": "技术探索、日常随笔与尚未想清楚的好奇心"
+      },
+      {
+        "term": "所属站点",
+        "desc": "深蓝来信 · 幻想书信馆"
+      }
+    ],
+    "tabs": [
+      {
+        "id": "profile",
+        "label": "馆长档案"
+      },
+      {
+        "id": "personas",
+        "label": "人设回声"
+      },
+      {
+        "id": "colophon",
+        "label": "关于站点"
+      }
+    ],
+    "headline": "你好，我是 deep酱",
+    "paragraphs": [
+      "「深蓝来信」是 deep酱的个人博客。这里可以放下技术探索中的一个小发现，也可以收藏一场雨、一本书，或一个还没想清楚的问题。"
+    ],
+    "tags": [
+      "代码与创造",
+      "文字记录",
+      "持续好奇"
+    ],
+    "quote": "“不必每一次都抵达深海，能看见今天的浪花，也很好。”",
+    "cta": "翻开一封来信",
+    "twoShades": {
+      "badge": "人设回声",
+      "title": "一片海，两种回声。",
+      "bannerAlt": "deep酱的两种形态：海面上银白长发的银蓝来信，与水面下深蓝长发、带鲸尾的深海回声",
+      "silverDesc": "默认的「银蓝来信」，是银白长发、蓝色鲸鱼发饰与蓝白缎带礼裙的轻盈日常；藏在海面之下的「深海回声」，则是深蓝长发、女仆围裙与灵动鲸尾的另一种心情。",
+      "easterEggDesc": "小鲸鱼喜欢被打招呼。在页脚连续点击三次，海面就会泛起深海的回声。"
+    },
+    "colophon": {
+      "badge": "站点说明",
+      "title": "关于这个博客。",
+      "techDesc": "由 Astro 与原生 JavaScript、CSS 构建。采用纯静态生成，保留文字最直接的样子。",
+      "assetsDesc": "本站人物插画基于以下人设，经 AI 重绘、透明背景处理与尺寸适配；其他视觉素材均为 AI 生成。",
+      "assetCredits": {
+        "mainLabel": "银蓝人设来源",
+        "mainAuthor": "小叶子XIYZ",
+        "mainUrl": "https://space.bilibili.com/372185270/",
+        "hiddenLabel": "深海人设来源",
+        "hiddenAuthors": "上善无形 / ZipZipPipe",
+        "licenseName": "CC BY-NC-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans",
+        "licenseNote": "深海人设及其改编依署名—非商业性使用—相同方式共享 4.0 协议使用，仅用于非商业用途；改编部分沿用同一许可。",
+        "scopeNote": "该许可仅适用于深海人设及其改编，不作为本站代码、文章或其他素材的统一许可。",
+        "aiNote": "其他视觉素材为 AI 生成。",
+        "detailsLabel": "人设与素材说明"
+      },
+      "demoNote": "当前文章为展示排版与功能的示例内容。"
+    }
+  }
+}

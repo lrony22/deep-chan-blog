@@ -1,0 +1,53 @@
+---
+import { getCollection } from 'astro:content';
+import { visiblePosts, groupByYear } from '../lib/content.js';
+import { href } from '../lib/paths.js';
+import { siteConfig } from '../config.js';
+import copy from '../data/letterhouse-copy.json';
+import Whale from './Whale.astro';
+import ThemeModes from './ThemeModes.astro';
+import PersonaRail from './PersonaRail.astro';
+
+interface Props {
+  active?: 'home' | 'posts' | 'archive' | 'about' | '';
+  page?: string;
+}
+
+const { active = '', page = 'other' } = Astro.props;
+const posts = visiblePosts(await getCollection('blog'));
+const yearCount = groupByYear(posts).length;
+const nav = copy.header.nav;
+const archiveCount = copy.rail.archiveCountTemplate.replace('{count}', String(yearCount));
+const countFor = (id: string) => {
+  if (id === 'posts') return String(posts.length);
+  if (id === 'archive') return archiveCount;
+  return '';
+};
+---
+
+<aside class="site-rail glass-1" aria-label={copy.rail.aria}>
+  <a class="brand" href={href()} aria-label={copy.header.brandAria}>
+    <Whale size={34} />
+    <span>
+      <strong>{siteConfig.title}</strong>
+      <small>{copy.header.subtitle}</small>
+    </span>
+  </a>
+
+  <nav class="rail-nav" aria-label="主导航">
+    {nav.map((link, index) => (
+      <a
+        href={href(link.path)}
+        aria-current={active === link.id ? 'page' : undefined}
+        data-reveal="rail"
+        style={`--i:${index}`}
+      >
+        <span>{link.text}</span>
+        {countFor(link.id) && <small>{countFor(link.id)}</small>}
+      </a>
+    ))}
+  </nav>
+
+  <ThemeModes variant="rail" />
+  <PersonaRail page={page} />
+</aside>
