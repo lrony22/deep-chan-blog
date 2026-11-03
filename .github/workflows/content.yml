@@ -1,0 +1,20 @@
+name: Content updated
+
+on:
+  push:
+    branches: [content]
+    paths:
+      - 'articles/**'
+      - 'images/**'
+      - '.github/workflows/content.yml'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  notify:
+    if: github.ref == 'refs/heads/content'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify the main publishing workflow
+        run: echo 'Content updated; main will assemble and deploy the website.'
