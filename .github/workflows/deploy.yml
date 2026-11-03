@@ -1,8 +1,11 @@
 name: Deploy to GitHub Pages
 
-# Keep publishing manual until automatic deployment is explicitly enabled.
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: [Content updated]
+    branches: [content]
+    types: [completed]
 
 permissions:
   contents: read
@@ -13,20 +16,80 @@ concurrency:
 
 jobs:
   build:
-    if: github.ref == 'refs/heads/main'
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_repository.full_name == github.repository))
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pages: read
+    defaults:
+      run:
+        working-directory: site
     steps:
-      - name: Checkout source
+      - name: Checkout website code from main
         uses: actions/checkout@v7
+        with:
+          ref: main
+          path: site
+          persist-credentials: false
+
+      # Always read the current content tip, including when an older run is retried.
+      - name: Checkout articles from content
+        uses: actions/checkout@v7
+        with:
+          ref: content
+          path: content
+          persist-credentials: false
+          sparse-checkout: |
+            articles
+            images
+
+      - name: Assemble articles and images without committing to main
+        shell: python
+        run: |
+          from pathlib import Path
+          import shutil
+
+          source = Path('../content')
+          mappings = [
+              ('articles', 'src/content/blog', {'.md'}),
+              ('images', 'public/post-images', {'.png', '.jpg', '.jpeg', '.webp', '.gif', '.avif'}),
+          ]
+          if not (source / 'articles').is_dir():
+              raise SystemExit('content branch must contain articles/; see the publishing README.')
+          for folder, destination, extensions in mappings:
+              origin, target = source / folder, Path(destination)
+              if origin.is_symlink():
+                  raise SystemExit(f'Symlinks are not allowed: {origin}')
+              if folder == 'images' and target.exists():
+                  shutil.rmtree(target)
+              target.mkdir(parents=True, exist_ok=True)
+              if not origin.exists():
+                  continue
+              for item in origin.rglob('*'):
+                  if item.is_symlink():
+                      raise SystemExit(f'Symlinks are not allowed: {item}')
+                  if item.is_file() and item.suffix.lower() in extensions:
+                      output = target / item.relative_to(origin)
+                      if folder == 'articles' and output.exists():
+                          raise SystemExit(f'Article path conflicts with a main example: {output}')
+                      output.parent.mkdir(parents=True, exist_ok=True)
+                      shutil.copyfile(item, output)
+
+      - name: Record source revisions
+        shell: bash
+        run: |
+          printf 'Website main: %s\nContent: %s\n' "$(git rev-parse HEAD)" "$(git -C ../content rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: npm
+          cache-dependency-path: site/package-lock.json
 
       - name: Read Pages configuration
         id: pages
@@ -44,7 +107,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: site/dist
 
   deploy:
     needs: build
