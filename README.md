@@ -21,6 +21,10 @@ npm run preview
 在仓库 Settings → Pages 中选择 GitHub Actions。在默认分支包含工作流后，从 Actions 手动运行 Deploy to GitHub Pages，选择 `main`。
 工作流使用 Node.js 24，自动读取 Pages 的域名和子路径，也支持仓库变量 `SITE_URL`、`BASE_PATH` 覆盖。推送不会自动部署。
 
+## 源码许可
+
+本项目自有的博客程序源码及构建、部署配置采用 [MIT 许可证](./LICENSE)。文章（含示例）、网站文案、图片、人设及其改编、站点标识、字体和第三方素材按各自的权利声明使用。
+
 ## 人设与素材署名
 
 - 银蓝人设来源：Bilibili UP 主 [小叶子XIYZ](https://space.bilibili.com/372185270/)。
